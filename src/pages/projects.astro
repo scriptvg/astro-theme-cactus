@@ -14,7 +14,7 @@ const allProjects = await getAllProjects();
       <ul class="list-inside list-disc" role="list">
         {allProjects.map((project: CollectionEntry<"project">) => (
           <li>
-            <a class="cactus-link" href={project.data.ogImage ?? project.data.coverImage?.src ?? "#"} target="_blank" rel="noopener noreferrer">
+            <a class="cactus-link" href={`/project/${project.id}/`}>
               {project.data.title}
             </a>
             {project.data.description && <span>: {project.data.description}</span>}

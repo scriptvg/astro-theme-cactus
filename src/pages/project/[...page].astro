@@ -1,0 +1,63 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Pagination from "@/components/Paginator.astro";
+import ProjectPreview from "@/components/project/ProjectPreview.astro"; // Assuming this will be created
+import { getAllProjects } from "@/data/project";
+import PageLayout from "@/layouts/Base.astro";
+import { collectionDateSort } from "@/utils/date";
+import type { GetStaticPaths, Page } from "astro";
+import { Icon } from "astro-icon/components";
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const MAX_PROJECTS_PER_PAGE = 10;
+  const allProjects = await getAllProjects();
+  // No tags for projects in this example, simplify props
+  return paginate(allProjects.sort(collectionDateSort), {
+    pageSize: MAX_PROJECTS_PER_PAGE,
+  });
+}) satisfies GetStaticPaths;
+
+interface Props {
+  page: Page<CollectionEntry<"project">>;
+}
+
+const { page } = Astro.props;
+
+const meta = {
+  description: "Explore my collection of projects.",
+  title: "Projects",
+};
+
+const paginationProps = {
+  ...(page.url.prev && {
+    prevUrl: {
+      text: "← Previous Page",
+      url: page.url.prev,
+    },
+  }),
+  ...(page.url.next && {
+    nextUrl: {
+      text: "Next Page →",
+      url: page.url.next,
+    },
+  }),
+};
+
+// Grouping by year might not be relevant for projects, or could be adapted
+// For simplicity, we'll list them directly without grouping by year
+---
+
+<PageLayout meta={meta}>
+  <div class="mb-6 flex items-center gap-3">
+    <h1 class="title">Projects</h1>
+    {/* RSS feed for projects might be a future addition */}
+  </div>
+  <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {
+      page.data.map((project) => (
+        <ProjectPreview project={project} />
+      ))
+    }
+  </div>
+  <Pagination {...paginationProps} />
+</PageLayout>

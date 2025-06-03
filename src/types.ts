@@ -72,6 +72,8 @@ export interface Content {
 	value: string;
 }
 
+
+
 export interface Rels {
 	canonical: string;
 }
