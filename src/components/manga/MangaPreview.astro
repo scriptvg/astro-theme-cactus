@@ -1,0 +1,58 @@
+---
+import type { CollectionEntry } from "astro:content";
+import FormattedDate from "@/components/FormattedDate.astro";
+import type { HTMLTag, Polymorphic } from "astro/types";
+import { Image } from "astro:assets";
+
+
+type Props<Tag extends HTMLTag> = Polymorphic<{ as: Tag }> & {
+	post: CollectionEntry<"post" | "project" | "manga">;
+	withDesc?: boolean;
+};
+
+const { as: Tag = "div", post, withDesc = false } = Astro.props;
+---
+
+<div class="group flex flex-col sm:flex-row items-center sm:items-start gap-4 p-4 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out hover:-translate-y-1 hover:scale-105">
+    {post.data.coverImage && (
+        <div class="flex-shrink-0 w-32 h-48 sm:w-40 sm:h-60 overflow-hidden rounded-md group-hover:scale-105 transition-transform duration-300 ease-in-out">
+            {typeof post.data.coverImage.src === 'string' ? (
+                <img
+                    src={post.data.coverImage.src}
+                    alt={post.data.coverImage.alt}
+                    class="w-full h-full object-cover"
+                />
+            ) : (
+                <Image
+                    src={post.data.coverImage.src}
+                    alt={post.data.coverImage.alt}
+                    class="w-full h-full object-cover"
+                />
+            )}
+        </div>
+    )}
+    <div class="flex flex-col justify-between flex-grow text-center sm:text-left">
+        <FormattedDate
+            class="min-w-30 font-semibold text-gray-600 dark:text-gray-400"
+            date={post.data.publishDate}
+        />
+        <Tag>
+            {post.data.draft && <span class="text-red-500">(Draft) </span>}
+            <a class="cactus-link text-xl font-bold hover:text-primary-500 transition-colors duration-200" data-astro-prefetch href={post.collection === 'project' ? `/projects/${post.id}/` : post.collection === 'manga' ? `/mangas/${post.id}/` : `/${post.collection}/${post.id}/`}>
+                {post.data.title}
+            </a>
+            <p class="text-amber-100">{post.data.status}</p>
+            <p class="text-amber-100">Rating: {post.data.rating}</p>
+            {post.data.category && Array.isArray(post.data.category) && (
+                <p class="text-sm text-gray-500 dark:text-gray-400">Categories: {post.data.category.join(', ')}</p>
+            )}
+            <p class="text-sm text-gray-500 dark:text-gray-400">Description: {post.data.description}</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Publish Date: {post.data.publishDate.toLocaleDateString()}</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Author: {post.data.author}</p>
+            {post.data.tags && Array.isArray(post.data.tags) && (
+                <p class="text-sm text-gray-500 dark:text-gray-400">Tags: {post.data.tags.join(', ')}</p>
+            )}
+        </Tag>
+        {withDesc && <p class="line-clamp-3 italic text-gray-500 dark:text-gray-400 mt-2">{post.data.description}</p>}
+    </div>
+</div>

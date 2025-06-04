@@ -1,0 +1,23 @@
+---
+import { render } from "astro:content";
+import { getAllMangas } from "@/data/manga";
+import PostLayout from "@/layouts/BlogPost.astro";
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+
+export const getStaticPaths = (async () => {
+	const mangaEntries = await getAllMangas();
+	return mangaEntries.map((manga) => ({
+		params: { slug: manga.id },
+		props: { manga },
+	}));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { manga } = Astro.props;
+const { Content } = await render(manga);
+---
+
+<PostLayout post={manga}>
+	<Content />
+</PostLayout>

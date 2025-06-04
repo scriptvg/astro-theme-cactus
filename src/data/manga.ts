@@ -1,10 +1,10 @@
 import { getCollection } from "astro:content";
 import { collectionDateSort } from "@/utils/date";
 
-export async function getAllProjects() {
-	const allProjects = await getCollection("project", ({ data }) => {
+export async function getAllMangas() {
+	const allMangas = await getCollection("manga", ({ data }) => {
 		return import.meta.env.PROD ? data.draft !== true : true;
 	});
 
-	return allProjects.sort(collectionDateSort);
+	return allMangas.sort(collectionDateSort);
 }

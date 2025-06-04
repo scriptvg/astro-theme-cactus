@@ -1,0 +1,61 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Pagination from "@/components/Paginator.astro";
+import PostPreview from "@/components/blog/PostPreview.astro";
+import { getAllProjects } from "@/data/project";
+import PageLayout from "@/layouts/Base.astro";
+import { collectionDateSort } from "@/utils/date";
+import type { GetStaticPaths, Page } from "astro";
+
+export const getStaticPaths = (async ({ paginate }) => {
+	const MAX_PROJECTS_PER_PAGE = 10;
+	const allProjects = await getAllProjects();
+	return paginate(allProjects.sort(collectionDateSort), {
+		pageSize: MAX_PROJECTS_PER_PAGE,
+	});
+}) satisfies GetStaticPaths;
+
+interface Props {
+	page: Page<CollectionEntry<"project">>;
+}
+
+const { page } = Astro.props;
+
+const meta = {
+	description: "My collection of projects",
+	title: "Projects",
+};
+
+const paginationProps = {
+	...(page.url.prev && {
+		prevUrl: {
+			text: "← Previous Page",
+			url: page.url.prev,
+		},
+	}),
+	...(page.url.next && {
+		nextUrl: {
+			text: "Next Page →",
+			url: page.url.next,
+		},
+	}),
+};
+---
+
+<PageLayout meta={meta}>
+	<div class="mb-6 flex items-center gap-3">
+		<h1 class="title">Projects</h1>
+	</div>
+	<div class="grid sm:grid-cols-[3fr_1fr] sm:gap-x-8 sm:gap-y-16">
+		<div>
+			<ul class="mt-5 mb-16 space-y-6 text-start">
+				{page.data.map((p) => (
+					<li class="grid gap-2 sm:grid-cols-[auto_1fr] sm:[&_q]:col-start-2">
+						<PostPreview post={p} />
+					</li>
+				))}
+			</ul>
+			<Pagination {...paginationProps} />
+		</div>
+	</div>
+</PageLayout>

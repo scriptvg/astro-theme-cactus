@@ -4,7 +4,7 @@ import type { AstroExpressiveCodeOptions } from "astro-expressive-code";
 export const siteConfig: SiteConfig = {
 	// Used as both a meta property (src/components/BaseHead.astro L:31 + L:49) & the generated satori png (src/pages/og-image/[slug].png.ts)
 	author: "Allan Velez Gonzalez",
-  owner: "Allan Velez Gonzalez",
+/*   owner: "Allan Velez Gonzalez", */
   
 	// Date.prototype.toLocaleDateString() parameters, found in src/utils/date.ts.
 	date: {
@@ -27,7 +27,7 @@ export const siteConfig: SiteConfig = {
 		- The link value found in src/components/layout/Header.astro L:35
 		- In the footer found in src/components/layout/Footer.astro L:12
 	*/
-	title: "Allan Velez Gonzalez",
+	title: "Astro Cactus Blog",
 	// ! Please remember to replace the following site property with your own domain, used in astro.config.ts
 	url: "https://astro-cactus.chriswilliams.dev/",
 };
@@ -54,11 +54,17 @@ export const menuLinks: { path: string; title: string }[] = [
     path: "/projects/",
     title: "Projects",
   },
+  {
+    path: "/mangas/",
+    title: "Mangas",
+  },
 	{
 		path: "/contact/",
 		title: "Contact",
 	},
 ];
+
+
 
 // https://expressive-code.com/reference/configuration/
 export const expressiveCodeOptions: AstroExpressiveCodeOptions = {

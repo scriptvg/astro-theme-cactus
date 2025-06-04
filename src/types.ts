@@ -1,5 +1,5 @@
 export interface SiteConfig {
-  owner: string;
+/*   owner: string; */
 	author: string;
 	date: {
 		locale: string | string[] | undefined;

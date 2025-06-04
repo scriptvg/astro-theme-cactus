@@ -4,7 +4,7 @@ import type { CollectionEntry } from "astro:content";
 import FormattedDate from "@/components/FormattedDate.astro";
 
 interface Props {
-	content: CollectionEntry<"post">;
+	content: CollectionEntry<"post" | "project" | "manga">;
 	readingTime: string;
 }
 
@@ -20,14 +20,20 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
 
 {
 	data.coverImage && (
-		<div class="mb-6 aspect-video">
-			<Image
-				alt={data.coverImage.alt}
-				class="object-cover"
-				fetchpriority="high"
-				loading="eager"
-				src={data.coverImage.src}
-			/>
+		<div class="relative aspect-[16/9] w-full overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
+			{typeof data.coverImage.src === 'string' ? (
+				<img
+					src={data.coverImage.src}
+					alt={data.coverImage.alt}
+					class="h-full w-full object-cover"
+				/>
+			) : (
+				<Image
+					src={data.coverImage.src}
+					alt={data.coverImage.alt}
+					class="h-full w-full object-cover"
+				/>
+			)}
 		</div>
 	)
 }
